@@ -1,5 +1,4 @@
 import { useGooglePlayIntegration } from '../../hooks/useGooglePlayIntegration';
-import { UI_SPECS } from '../../constants/config';
 import { GooglePlayHeader } from './GooglePlayHeader';
 import { PlayStoreApiSection } from './PlayStoreApiSection';
 import { WebhookConfigSection } from './WebhookConfigSection';
@@ -30,17 +29,11 @@ export default function GooglePlayIntegration() {
   };
 
   return (
-    <div
-      className="bg-white min-h-full"
-      style={{ maxWidth: `${UI_SPECS.FRAME_WIDTH}px`, margin: '0 auto' }}
-    >
+    <div className="bg-white min-h-full">
       <GooglePlayHeader onBack={handleBack} />
 
-      <div className="px-6">
-        <div
-          className="mx-auto space-y-6"
-          style={{ maxWidth: `${UI_SPECS.CONTENT_MAX_WIDTH}px` }}
-        >
+      <div className="page-gutter">
+        <div className="page-content mx-auto space-y-6">
           <PlayStoreApiSection
             register={register}
             errors={errors}

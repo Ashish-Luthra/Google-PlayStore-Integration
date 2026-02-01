@@ -1,6 +1,21 @@
 import http from 'http';
 
-const PORT = process.env.MOCK_SERVER_PORT || 3001;
+const requireEnv = (key) => {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing required env var: ${key}`);
+  }
+  return value;
+};
+
+const PORT = Number(requireEnv('MOCK_SERVER_PORT'));
+const HOST = requireEnv('MOCK_SERVER_HOST');
+const ENDPOINTS = {
+  TEST_CONNECTION: requireEnv('MOCK_TEST_CONNECTION_PATH'),
+  SAVE_CONFIG: requireEnv('MOCK_SAVE_CONFIG_PATH'),
+  SEND_TEST_WEBHOOK: requireEnv('MOCK_SEND_TEST_WEBHOOK_PATH'),
+  CONNECT_APP: requireEnv('MOCK_CONNECT_APP_PATH'),
+};
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -19,7 +34,7 @@ async function handleRequest(req, res) {
     return;
   }
 
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://${HOST}:${PORT}`);
   const path = url.pathname;
 
   // Parse body for POST requests
@@ -34,7 +49,7 @@ async function handleRequest(req, res) {
 
   // Route handlers
   const routes = {
-    '/api/google-play/test-connection': async () => {
+    [ENDPOINTS.TEST_CONNECTION]: async () => {
       await delay(1500);
 
       if (data.jsonKeyContent) {
@@ -52,12 +67,12 @@ async function handleRequest(req, res) {
       return { success: true, message: 'Connection successful!' };
     },
 
-    '/api/google-play/config': async () => {
+    [ENDPOINTS.SAVE_CONFIG]: async () => {
       await delay(1000);
       return { success: true, message: 'Configuration saved successfully!' };
     },
 
-    '/api/google-play/webhook/test': async () => {
+    [ENDPOINTS.SEND_TEST_WEBHOOK]: async () => {
       await delay(1000);
 
       if (!data.webhookUrl?.startsWith('https://')) {
@@ -67,7 +82,7 @@ async function handleRequest(req, res) {
       return { success: true, message: 'Test event sent successfully!' };
     },
 
-    '/api/google-play/connect': async () => {
+    [ENDPOINTS.CONNECT_APP]: async () => {
       await delay(1500);
       return { success: true, message: 'App connected successfully!' };
     },
@@ -93,10 +108,10 @@ async function handleRequest(req, res) {
 const server = http.createServer(handleRequest);
 
 server.listen(PORT, () => {
-  console.log(`Mock server running at http://localhost:${PORT}`);
+  console.log(`Mock server running at http://${HOST}:${PORT}`);
   console.log('Available endpoints:');
-  console.log('  POST /api/google-play/test-connection');
-  console.log('  POST /api/google-play/config');
-  console.log('  POST /api/google-play/webhook/test');
-  console.log('  POST /api/google-play/connect');
+  console.log(`  POST ${ENDPOINTS.TEST_CONNECTION}`);
+  console.log(`  POST ${ENDPOINTS.SAVE_CONFIG}`);
+  console.log(`  POST ${ENDPOINTS.SEND_TEST_WEBHOOK}`);
+  console.log(`  POST ${ENDPOINTS.CONNECT_APP}`);
 });

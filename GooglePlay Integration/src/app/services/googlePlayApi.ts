@@ -1,11 +1,10 @@
 /// <reference types="vite/client" />
-import { API_CONFIG } from '../constants/config';
+import { API_BASE_URL, API_ENDPOINTS, API_TIMEOUT, USE_MOCK_MODE } from '../config/api';
 import type { GooglePlayFormData, ApiResponse } from '../types/googlePlay';
 
-const { BASE_URL, ENDPOINTS, TIMEOUT } = API_CONFIG;
-
-// Use mock mode in development when no API server is configured
-const USE_MOCK = import.meta.env.DEV && BASE_URL.includes('localhost');
+const BASE_URL = API_BASE_URL;
+const ENDPOINTS = API_ENDPOINTS;
+const TIMEOUT = API_TIMEOUT;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -52,7 +51,7 @@ export async function testConnection(data: GooglePlayFormData): Promise<ApiRespo
   }
 
   // Mock mode for development without backend
-  if (USE_MOCK) {
+  if (USE_MOCK_MODE) {
     await delay(1500);
     return { success: true, message: 'Connection successful! Your credentials are valid.' };
   }
@@ -73,7 +72,7 @@ export async function testConnection(data: GooglePlayFormData): Promise<ApiRespo
 }
 
 export async function saveConfiguration(data: GooglePlayFormData): Promise<ApiResponse> {
-  if (USE_MOCK) {
+  if (USE_MOCK_MODE) {
     await delay(1000);
     return { success: true, message: 'Configuration saved successfully!' };
   }
@@ -97,7 +96,7 @@ export async function sendTestWebhook(webhookUrl: string): Promise<ApiResponse> 
     return { success: false, message: 'Webhook URL must use HTTPS' };
   }
 
-  if (USE_MOCK) {
+  if (USE_MOCK_MODE) {
     await delay(1000);
     return { success: true, message: 'Test webhook sent successfully!' };
   }
@@ -117,7 +116,7 @@ export async function sendTestWebhook(webhookUrl: string): Promise<ApiResponse> 
 }
 
 export async function connectApp(data: GooglePlayFormData): Promise<ApiResponse> {
-  if (USE_MOCK) {
+  if (USE_MOCK_MODE) {
     await delay(1500);
     return { success: true, message: 'App connected successfully!' };
   }

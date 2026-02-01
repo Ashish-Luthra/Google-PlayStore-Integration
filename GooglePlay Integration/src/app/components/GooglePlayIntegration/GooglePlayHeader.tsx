@@ -1,6 +1,6 @@
 import { ChevronLeft, ExternalLink } from 'lucide-react';
 import { GooglePlayIcon } from './GooglePlayIcon';
-import { EXTERNAL_LINKS, UI_SPECS } from '../../constants/config';
+import { DOCUMENTATION_URL } from '../../config/links';
 
 interface GooglePlayHeaderProps {
   onBack?: () => void;
@@ -8,11 +8,8 @@ interface GooglePlayHeaderProps {
 
 export function GooglePlayHeader({ onBack }: GooglePlayHeaderProps) {
   return (
-    <header className="px-6 py-8">
-      <div
-        className="mx-auto"
-        style={{ maxWidth: `${UI_SPECS.CONTENT_MAX_WIDTH}px` }}
-      >
+    <header className="page-gutter py-8">
+      <div className="page-content mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
@@ -38,7 +35,7 @@ export function GooglePlayHeader({ onBack }: GooglePlayHeaderProps) {
           </div>
 
           <a
-            href={EXTERNAL_LINKS.DOCUMENTATION}
+            href={DOCUMENTATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm text-black hover:text-[#2773ff] transition-colors"
@@ -49,10 +46,7 @@ export function GooglePlayHeader({ onBack }: GooglePlayHeaderProps) {
         </div>
       </div>
 
-      <div
-        className="mx-auto mt-6"
-        style={{ maxWidth: `${UI_SPECS.CONTENT_MAX_WIDTH}px` }}
-      >
+      <div className="page-content mx-auto mt-6">
         <div className="h-px bg-[#8798AD]" role="separator" />
       </div>
     </header>
