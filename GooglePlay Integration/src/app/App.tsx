@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Toaster } from 'sonner';
 import GooglePlayIntegration from '@/app/components/GooglePlayIntegration';
+import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { UI_SPECS } from '@/app/constants/config';
 
 export default function App() {
@@ -47,7 +48,9 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-auto">
-        <GooglePlayIntegration />
+        <ErrorBoundary>
+          <GooglePlayIntegration />
+        </ErrorBoundary>
       </main>
     </div>
   );
