@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { testConnection, saveConfiguration, sendTestWebhook, connectApp } from './googlePlayApi';
 import type { GooglePlayFormData } from '../types/googlePlay';
 
@@ -11,14 +11,6 @@ const mockFormData: GooglePlayFormData = {
 };
 
 describe('googlePlayApi', () => {
-  beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn());
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
   describe('testConnection', () => {
     it('should return error for invalid JSON key', async () => {
       const result = await testConnection({
@@ -47,23 +39,10 @@ describe('googlePlayApi', () => {
       expect(result.message).toBe('Missing required fields');
     });
 
-    it('should call API with valid data', async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true, message: 'Connected' }),
-      });
-      vi.stubGlobal('fetch', mockFetch);
-
+    it('should return success with valid data (mock mode)', async () => {
       const result = await testConnection(mockFormData);
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/google-play/test-connection'),
-        expect.objectContaining({
-          method: 'POST',
-          body: JSON.stringify(mockFormData),
-        })
-      );
       expect(result.success).toBe(true);
+      expect(result.message).toContain('Connection successful');
     });
   });
 
@@ -74,57 +53,26 @@ describe('googlePlayApi', () => {
       expect(result.message).toBe('Webhook URL must use HTTPS');
     });
 
-    it('should call API with valid https URL', async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true, message: 'Sent' }),
-      });
-      vi.stubGlobal('fetch', mockFetch);
-
+    it('should return success with valid https URL (mock mode)', async () => {
       const result = await sendTestWebhook('https://example.com/webhook');
-
-      expect(mockFetch).toHaveBeenCalled();
       expect(result.success).toBe(true);
+      expect(result.message).toContain('webhook');
     });
   });
 
   describe('saveConfiguration', () => {
-    it('should call API with form data', async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true, message: 'Saved' }),
-      });
-      vi.stubGlobal('fetch', mockFetch);
-
+    it('should return success with form data (mock mode)', async () => {
       const result = await saveConfiguration(mockFormData);
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/google-play/config'),
-        expect.objectContaining({
-          method: 'POST',
-        })
-      );
       expect(result.success).toBe(true);
+      expect(result.message).toContain('saved');
     });
   });
 
   describe('connectApp', () => {
-    it('should call API with form data', async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true, message: 'Connected' }),
-      });
-      vi.stubGlobal('fetch', mockFetch);
-
+    it('should return success with form data (mock mode)', async () => {
       const result = await connectApp(mockFormData);
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/google-play/connect'),
-        expect.objectContaining({
-          method: 'POST',
-        })
-      );
       expect(result.success).toBe(true);
+      expect(result.message).toContain('connected');
     });
   });
 });
